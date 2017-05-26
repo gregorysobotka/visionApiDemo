@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <!-- Force latest IE rendering engine or ChromeFrame if installed -->
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+    <meta charset="utf-8">
+    <title>Vision</title>
+    <meta name="description" content="File Upload widget with multiple file selection, drag&amp;drop support, progress bar, validation and preview images, audio and video for jQuery. Supports cross-domain, chunked and resumable file uploads. Works with any server-side platform (Google App Engine, PHP, Python, Ruby on Rails, Java, etc.) that supports standard HTML form file uploads.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Generic page styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="css/jquery.fileupload.css">
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-fixed-top .navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Cloud vision API Application</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <!--<li><a href="https://github.com/blueimp/jQuery-File-Upload/tags">Download</a></li>-->
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- The fileinput-button span is used to style the file input field as button -->
+    <h3>View all</h3>
+    <div id="files" class="files"></div>
+    <br>
+    <div class="panel panel-default">
+       <div id="display-all">
+           <div class="row">
+               {{#each links}}
+                   <div class="col-lg-3 col-md-4 col-xs-6 thumb image-preview">
+                       <a class="thumbnail" href="/details/{{this}}" style="margin-bottom:0;">
+                           <img class="img-responsive" src="/images/{{this}}" alt="">
+                       </a>
+                       <button class="remove" data-removeID="{{this}}" style="width:100%; margin-bottom:1em;">Remove</button>
+                   </div>
+               {{/each}}
+           </div>
+       </div>
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script>
+    $('.remove').click(function(){
+
+        var removeID = $(this).attr('data-removeID'),
+                button = $(this);
+
+        $.ajax({
+            url : '/remove/'+removeID,
+            type : 'delete',
+            data: {id : removeID}
+        })
+        .error(function(response){
+            console.log(response)
+        })
+        .done(function(response){
+            if(response.imageRemoved){
+                button.closest('.image-preview').hide();
+            }
+        });
+        console.log(removeID);
+    });
+</script>
+
+</body>
+</html>
